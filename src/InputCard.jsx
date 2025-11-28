@@ -1,12 +1,17 @@
 import { useState } from "react";
+import Modal from "./Modal"; // your modal component
+import { FaEdit } from "react-icons/fa";
 
 function InputCard() {
   const [taskInput, setTaskInput] = useState("");
   const [taskList, setTaskList] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
 
+  // Add a new task
   function saveTaskList() {
     if (taskInput.trim() === "") return;
-    const newTask =                                                                                                   {
+    const newTask = {
       id: Date.now(),
       text: taskInput,
       completed: false,
@@ -15,16 +20,40 @@ function InputCard() {
     setTaskInput("");
   }
 
+  // Delete task
   function deleteTask(id) {
     setTaskList((prev) => prev.filter((task) => task.id !== id));
   }
 
-  function toogleCompleteBtn(id) {
+  // Toggle completed
+  function toggleCompleteBtn(id) {
     setTaskList((prev) =>
       prev.map((task) =>
         task.id === id ? { ...task, completed: !task.completed } : task
       )
     );
+  }
+
+  // Open modal and set selected task
+  function showEditModal(task) {
+    setSelectedTask(task); // track which task is being edited
+    setIsOpen(true);
+  }
+
+  function closeEditModal() {
+    setIsOpen(false);
+    setSelectedTask(null);
+  }
+
+  // Save changes from modal
+  function saveEditedTask() {
+    if (!selectedTask.text.trim()) return; // prevent empty edit
+    setTaskList((prev) =>
+      prev.map((task) =>
+        task.id === selectedTask.id ? selectedTask : task
+      )
+    );
+    closeEditModal();
   }
 
   return (
@@ -60,7 +89,7 @@ function InputCard() {
                 <input
                   type="checkbox"
                   checked={task.completed}
-                  onChange={() => toogleCompleteBtn(task.id)}
+                  onChange={() => toggleCompleteBtn(task.id)}
                   className="h-5 w-5 accent-blue-500"
                 />
 
@@ -77,8 +106,11 @@ function InputCard() {
 
               {/* right side: actions */}
               <div className="flex items-center gap-4">
-                <button className="text-green-600 font-medium hover:underline">
-                  Edit
+                <button
+                  className="text-green-600 font-medium hover:underline flex items-center gap-1"
+                  onClick={() => showEditModal(task)}
+                >
+                  <FaEdit size={16} /> Edit
                 </button>
                 <button
                   onClick={() => deleteTask(task.id)}
@@ -91,6 +123,47 @@ function InputCard() {
           ))}
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {isOpen && selectedTask && (
+        <Modal isOpen={isOpen} onClose={closeEditModal}>
+          <div className="p-4 flex flex-col gap-4">
+            <div className="flex items-center gap-2 text-gray-500">
+              <FaEdit size={18} />
+              <h2 className="text-md font-semibold">Edit Task</h2>
+            </div>
+
+        <input
+        type="text"
+        value={selectedTask.text}
+        onChange={(e) =>
+          setSelectedTask({ ...selectedTask, text: e.target.value })
+        }
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            saveEditedTask(); // call your save function
+          }
+        }}
+        className="border border-gray-300 px-3 py-2 rounded-md w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+      />
+
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={closeEditModal}
+                className="px-3 py-1 rounded bg-gray-300 hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveEditedTask}
+                className="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </>
   );
 }
