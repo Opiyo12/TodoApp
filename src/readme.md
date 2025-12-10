@@ -21,7 +21,11 @@ git clone https://github.com/Opiyo12/TodoApp.git
 2.  install dependency
 cd TodoApp
 npm install
+3. Start the development server
+npm run dev
 ## Technologies
 Frontend: React, Tailwind CSS
 ## Project Structure
 todoapp/
+
+
