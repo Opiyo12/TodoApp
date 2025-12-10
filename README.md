@@ -8,13 +8,13 @@ A todo Application built in react and tailwind css
 -dark/lightmode toggle
 ## Screenshots
 **Dark Mode**  
-![Dark Mode](/screenshots/darkmode.png)
+![Dark Mode](screenshots/darkmode.png)
 **Light Mode**  
-![Light Mode](/screenshots/lightmode.png)
+![Light Mode](screenshots/lightmode.png)
 **Task List**  
-![Todo List](/screenshots/taskList.png)
+![Todo List](screenshots/taskList.png)
 **Task Edit**  
-![Todo List](/screenshots/editing.png)
+![Todo List](screenshots/editing.png)
 ## Installation
 1. Clone the repository:
 git clone https://github.com/Opiyo12/TodoApp.git
